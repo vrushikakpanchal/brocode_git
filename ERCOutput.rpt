@@ -1,0 +1,8 @@
+ERC report (2025-03-08T14:10:58+0530, Encoding UTF8)
+
+***** Sheet /
+[lib_symbol_issues]: The current configuration does not include the library 'ESP32-S3-DEVKITC-1-N8R'
+    ; warning
+    @(163.8300 mm, 101.6000 mm): Symbol U2 [ESP32-S3-DEVKITC-1-N8R2]
+
+ ** ERC messages: 1  Errors 0  Warnings 1
