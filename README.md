@@ -32,12 +32,12 @@ With rapid urbanization, cities face challenges in managing infrastructure, opti
 - **Cloud & AI:** Firebase, Edge AI for anomaly detection
 
 ## Team Members 👥
-- @Vrushika Panchal [Diploma - AI/ML]
-- @Harsh Pandey [B.Tech - EXTC]
-- @Soham Nagvekar [B.Tech - EXTC]
-- @Prasad Rane [B.Tech - EXTC]
-- @Atharva Wadekar [B.Tech - EXTC]
-- @Advait Shinde [Diploma - AI/ML]
+- Vrushika Panchal [Diploma - AI/ML]
+- Harsh Pandey [B.Tech - EXTC]
+- Soham Nagvekar [B.Tech - EXTC]
+- Prasad Rane [B.Tech - EXTC]
+- Atharva Wadekar [B.Tech - EXTC]
+- Advait Shinde [Diploma - AI/ML]
 
 ## Repository Structure
 ```
