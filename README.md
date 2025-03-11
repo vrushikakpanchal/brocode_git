@@ -42,10 +42,10 @@ With rapid urbanization, cities face challenges in managing infrastructure, opti
 ## Repository Structure
 ```
 📂 brocode_git
- ┣ 📂 hardware_designs        # KiCad PCB designs
- ┣ 📂 firmware_code           # ESP32 & IoT sensor integration
- ┣ 📂 web_dashboard           # React.js frontend for monitoring
- ┣ 📂 AI_model                # Traffic analysis & anomaly detection
+ ┣ 📂 01_Kicad_PCB        # KiCad PCB designs
+ ┣ 📂 02_GERBER           # ESP32 & IoT sensor integration
+ ┣ 📂 03_project_images           # React.js frontend for monitoring
+ ┣ 📂 04_frontend_website               # Traffic analysis & anomaly detection
  ┣ 📜 README.md               # Project documentation
 ```
 
