@@ -9,19 +9,6 @@
 - Advait Shinde [Diploma - AI ML]
 - Vrushika Panchal [Diploma - AI ML]
 
-## Table of Contents
-1. [Problem Statement](#problem-statement)
-2. [Introduction](#introduction)
-3. [Project Overview](#project-overview)
-4. [Design Verification](#design-verification)
-5. [Hardware Implementation](#hardware-implementation)
-6. [Component List](#component-list)
-7. [PCB Layout](#pcb-layout)
-8. [Enclosure Design](#enclosure-design)
-9. [Documentation](#documentation)
-10. [Final Product](#final-product)
-11. [GitHub Repository](#github-repository)
-
 ## Problem Statement
 
 With rapid urbanization, real-time environmental monitoring has become essential for sustainable city planning. The **Smart City Sentinel** project addresses this need by developing a modular PCB that integrates sensors, power management, and communication protocols. This enables seamless data collection and transmission, ensuring efficient environmental surveillance in urban areas.
@@ -40,12 +27,6 @@ The **Smart City Sentinel** is an advanced modular PCB designed for intelligent 
 - Modular design architecture allowing future enhancements with minimal modifications
 
 The system strictly adheres to power and connectivity constraints while maintaining optimal performance. Additionally, a precision-engineered 3D CAD model ensures seamless structural integration with the predefined solar panel, enhancing practical usability and real-world implementation potential.
-
-## Design Verification
-
-### Electrical Rule Check (ERC) and Design Rule Check (DRC)
-
-![ERC and DRC Verification](media/image1.jpeg)
 
 All design and electrical rule checks have been successfully passed, ensuring the PCB meets industry standards for manufacturing and electrical performance.
 
