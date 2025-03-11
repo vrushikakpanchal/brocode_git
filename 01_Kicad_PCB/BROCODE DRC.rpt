@@ -1,0 +1,16 @@
+** Drc report for UP20 BY HARSHPANDEY V1.kicad_pcb **
+** Created on 2025-03-08T14:14:22+0530 **
+
+** Found 2 DRC violations **
+[lib_footprint_issues]: The current configuration does not include the library 'esp32s3'.
+    Local override; warning
+    @(86.9705 mm, 86.3550 mm): Footprint U2
+[lib_footprint_issues]: The current configuration does not include the library 'battery'.
+    Local override; warning
+    @(112.4450 mm, 87.8300 mm): Footprint BT2
+
+** Found 0 unconnected pads **
+
+** Found 0 Footprint errors **
+
+** End of Report **
