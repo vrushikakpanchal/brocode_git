@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Environmental Monitoring Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --success-color: #4cc9f0;
+            --warning-color: #f72585;
+            --danger-color: #ff4d6d;
+            --info-color: #4895ef;
+            --background-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #333;
+            --text-secondary: #6c757d;
+            --border-radius: 10px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            font-size: 28px;
+            color: var(--primary-color);
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .location-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background-color: var(--card-bg);
+            padding: 8px 16px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .location-selector select {
+            border: none;
+            background: transparent;
+            font-size: 16px;
+            outline: none;
+            color: var(--text-color);
+            padding: 5px;
+        }
+
+        .date-time {
+            font-size: 14px;
+            color: var(--text-secondary);
+            text-align: right;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 20px;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-title i {
+            font-size: 18px;
+        }
+
+        .card-value {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .status.up {
+            color: #2ecc71;
+        }
+
+        .status.down {
+            color: #e74c3c;
+        }
+
+        .chart-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .chart-card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 20px;
+            height: 350px;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .chart-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .chart-filters {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chart-filter {
+            background-color: var(--background-color);
+            border: none;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .chart-filter.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .gauge-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .gauge {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .gauge-label {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 5px;
+            color: var(--text-secondary);
+        }
+
+        .gauge-visual {
+            width: 120px;
+            height: 60px;
+            position: relative;
+            margin-bottom: 10px;
+        }
+
+        .gauge-value {
+            position: absolute;
+            bottom: -20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .alerts-section {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .alerts-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .alerts-title {
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alerts-title i {
+            color: var(--warning-color);
+        }
+
+        .alert-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .alert-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            background-color: var(--background-color);
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        .alert-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        .alert-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .alert-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .alert-icon.high {
+            background-color: var(--danger-color);
+        }
+
+        .alert-icon.medium {
+            background-color: #f39c12;
+        }
+
+        .alert-icon.low {
+            background-color: var(--info-color);
+        }
+
+        .alert-details h4 {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .alert-details p {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .alert-time {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-top: 1px solid #eee;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .temp-status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .temp-status.normal {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: #27ae60;
+        }
+
+        .temp-status.high {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: #c0392b;
+        }
+
+        .temp-status.low {
+            background-color: rgba(52, 152, 219, 0.2);
+            color: #2980b9;
+        }
+
+        .battery-indicator {
+            width: 100%;
+            height: 10px;
+            background-color: #ecf0f1;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+
+        .battery-level {
+            height: 100%;
+            border-radius: 5px;
+            background: linear-gradient(90deg, #2ecc71, #27ae60);
+            transition: width 0.5s;
+        }
+
+        @media screen and (max-width: 1200px) {
+            .dashboard-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .chart-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .gauge-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media screen and (max-width: 576px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .location-selector {
+                width: 100%;
+            }
+            
+            .date-time {
+                text-align: left;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-cloud-sun-rain"></i>
+                <h1>Environmental Monitor</h1>
+            </div>
+            <div class="location-selector">
+                <i class="fas fa-map-marker-alt"></i>
+                <select id="locationSelect">
+                    <option value="Mumbai">Mumbai</option>
+                    <option value="Pune">Pune</option>
+                    <option value="Delhi">Delhi</option>
+                    <option value="Bangalore">Bangalore</option>
+                    <option value="Chennai">Chennai</option>
+                </select>
+            </div>
+        </header>
+
+        <div class="dashboard-grid">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fas fa-thermometer-half"></i>
+                        Temperature
+                    </div>
+                    <span class="temp-status normal">Normal</span>
+                </div>
+                <div class="card-value" id="temperature">26°C</div>
+                <div class="card-footer">
+                    <span>Min: <strong id="minTemp">22°C</strong></span>
+                    <span>Max: <strong id="maxTemp">28°C</strong></span>
+                    <div class="status up">
+                        <i class="fas fa-arrow-up"></i>
+                        <span id="tempChange">+1.2°C</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fas fa-tint"></i>
+                        Humidity
+                    </div>
+                </div>
+                <div class="card-value" id="humidity">62%</div>
+                <div class="card-footer">
+                    <span>Low: <strong id="minHumidity">45%</strong></span>
+                    <span>High: <strong id="maxHumidity">75%</strong></span>
+                    <div class="status down">
+                        <i class="fas fa-arrow-down"></i>
+                        <span id="humidityChange">-3%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fas fa-wind"></i>
+                        Dust Level
+                    </div>
+                </div>
+                <div class="card-value" id="dustLevel">18 μg/m³</div>
+                <div class="card-footer">
+                    <span>24h Avg: <strong id="avgDust">22 μg/m³</strong></span>
+                    <div class="status up">
+                        <i class="fas fa-arrow-up"></i>
+                        <span id="dustChange">+2 μg/m³</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fas fa-smog"></i>
+                        CO Level
+                    </div>
+                </div>
+                <div class="card-value" id="gasLevel">2.1 ppm</div>
+                <div class="card-footer">
+                    <span>Safe level: <strong>< 5 ppm</strong></span>
+                    <div class="status down">
+                        <i class="fas fa-arrow-down"></i>
+                        <span id="gasChange">-0.3 ppm</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div>© 2025 Environmental Monitoring System</div>
+            <div>Last data sync: <span id="lastSync">Just now</span></div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chart.js/3.9.1/chart.min.js"></script>
+    <script>
+        // Initialize date and time
+        function updateDateTime() {
+            const now = new Date();
+            const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+            
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('en-US', dateOptions);
+            document.getElementById('currentTime').textContent = now.toLocaleTimeString('en-US', timeOptions);
+        }
+        
+        updateDateTime();
+        setInterval(updateDateTime, 1000);
+
+        // Sample data for charts
+        const tempData = [22, 23, 25, 26, 27, 26, 25, 24, 23, 22, 21, 22, 23, 24, 25, 26, 27, 28, 26, 25, 24, 23, 24, 26];
+        const humidityData = [65, 63, 60, 58, 55, 57, 60, 62, 65, 68, 70, 72, 70, 68, 65, 63, 60, 58, 60, 62, 65, 66, 64, 62];
+        const dustData = [15, 16, 18, 20, 22, 24, 26, 24, 22, 20, 18, 16, 15, 14, 16, 18, 20, 21, 19, 17, 15, 16, 18, 18];
+        const gasData = [1.8, 1.9, 2.0, 2.1, 2.3, 2.4, 2.3, 2.2, 2.1, 2.0, 1.9, 1.8, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.1, 2.0, 1.9, 2.0, 2.1, 2.1];
+        
+        // Hours for X axis
+        const hours = Array.from({length: 24}, (_, i) => i);
+
+        // Initialize charts
+        const ctx = document.getElementById('trendsChart').getContext('2d');
+        const trendsChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: hours.map(h => `${h}:00`),
+                datasets: [
+                    {
+                        label: 'Temperature (°C)',
+                        data: tempData,
+                        borderColor: '#3498db',
+                        backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    },
+                    {
+                        label: 'Humidity (%)',
+                        data: humidityData,
+                        borderColor: '#2ecc71',
+                        backgroundColor: 'rgba(46, 204, 113, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    },
+                    {
+                        label: 'Dust (μg/m³)',
+                        data: dustData,
+                        borderColor: '#e67e22',
+                        backgroundColor: 'rgba(230, 126, 34, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    },
+                    {
+                        label: 'CO (ppm)',
+                        data: gasData,
+                        borderColor: '#e74c3c',
+                        backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        grid: {
+                            drawBorder: false
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+
+        // Initialize gauge charts
+        function createGauge(canvasId, value, color) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            return new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: [value, 100 - value],
+                        backgroundColor: [
+                            color,
+                            '#ecf0f1'
+                        ],
+                        borderWidth: 0,
+                        circumference: 180,
+                        rotation: 270
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            enabled: false
+                        }
+                    }
+                }
+            });
+        }
+
+        // Create gauges
+        createGauge('batteryGauge', 85, 'rgba(46, 204, 113, 0.8)');
+        createGauge('signalGauge', 92, 'rgba(52, 152, 219, 0.8)');
+        createGauge('dataQualityGauge', 98, 'rgba(155, 89, 182, 0.8)');
+
+        // Sample alerts data
+        const alerts = [
+            {
+                type: 'high',
+                title: 'High Temperature Alert',
+                description: 'Temperature exceeded 30°C for more than 1 hour',
+                time: '15 minutes ago'
+            },
+            {
+                type: 'medium',
+                title: 'Humidity Drop',
+                description: 'Humidity dropped below 40% threshold',
+                time: '1 hour ago'
+            },
+            {
+                type: 'low',
+                title: 'Battery Warning',
+                description: 'Sensor #3 battery level below 20%',
+                time: '2 hours ago'
+            },
+            {
+                type: 'medium',
+                title: 'CO Level Increase',
+                description: 'Carbon monoxide level increased by 30%',
+                time: '3 hours ago'
+            }
+        ];
+
+        // Render alerts
+        function renderAlerts() {
+            const alertsList = document.getElementById('alertsList');
+            alertsList.innerHTML = '';
+            
+            alerts.forEach(alert => {
+                const alertItem = document.createElement('div');
+                alertItem.className = 'alert-item';
+                
+                const icon = alert.type === 'high' ? 'exclamation-circle' : 
+                             alert.type === 'medium' ? 'exclamation-triangle' : 'info-circle';
+                
+                alertItem.innerHTML = `
+                    <div class="alert-info">
+                        <div class="alert-icon ${alert.type}">
+                            <i class="fas fa-${icon}"></i>
+                        </div>
+                        <div class="alert-details">
+                            <h4>${alert.title}</h4>
+                            <p>${alert.description}</p>
+                        </div>
+                    </div>
+                    <div class="alert-time">${alert.time}</div>
+                `;
+                
+                alertsList.appendChild(alertItem);
+            });
+        }
+        
+        renderAlerts();
+
+        // Handle chart period filters
+        document.querySelectorAll('.chart-filter[data-period]').forEach(button => {
+            button.addEventListener('click', function() {
+                document.querySelectorAll('.chart-filter[data-period]').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // In a real application, you would fetch data for the selected period
+                // For this demo, we'll just update the chart title
+                const period = this.dataset.period;
+                const chartTitle = document.querySelector('.chart-title');
+                chartTitle.textContent = `Environmental Trends (${period.charAt(0).toUpperCase() + period.slice(1)})`;
+            });
+        });
+
+        // Simulate real-time data updates
+        function updateSensorData() {
+            // Simulate random fluctuations in sensor data
+            const tempChange = (Math.random() * 0.6 - 0.3).toFixed(1);
+            const humidityChange = (Math.random() * 2 - 1).toFixed(0);
+            const dustChange = (Math.random() * 1 - 0.5).toFixed(1);
+            const gasChange = (Math.random() * 0.2 - 0.1).toFixed(1);
+            
+            const currentTemp = parseFloat(document.getElementById('temperature').textContent);
+            const currentHumidity = parseFloat(document.getElementById('humidity').textContent);
+            const currentDust = parseFloat(document.getElementById('dustLevel').textContent);
+            const currentGas = parseFloat(document.getElementById('gasLevel').textContent);
+            
+            const newTemp = (currentTemp + parseFloat(tempChange)).toFixed(1);
+            const newHumidity = Math.max(0, Math.min(100, (currentHumidity + parseFloat(humidityChange)))).toFixed(0);
+            const newDust = Math.max(0, (currentDust + parseFloat(dustChange))).toFixed(1);
+            const newGas = Math.max(0, (currentGas + parseFloat(gasChange))).toFixed(1);
+            
+            // Update displayed values
+            document.getElementById('temperature').textContent = `${newTemp}°C`;
+            document.getElementById('humidity').textContent = `${newHumidity}%`;
+            document.getElementById('dustLevel').textContent = `${newDust} μg/m³`;
+            document.getElementById('gasLevel').textContent = `${newGas} ppm`;
+            
+            // Update change indicators
+            document.getElementById('tempChange').textContent = tempChange > 0 ? `+${tempChange}°C` : `${tempChange}°C`;
+            document.getElementById('humidityChange').textContent = humidityChange > 0 ? `+${humidityChange}%` : `${humidityChange}%`;
+            document.getElementById('dustChange').textContent = dustChange > 0 ? `+${dustChange} μg/m³` : `${dustChange} μg/m³`;
+            document.getElementById('gasChange').textContent = gasChange > 0 ? `+${gasChange} ppm` : `${gasChange} ppm`;
+            
+            // Update status indicators
+            const tempStatus = document.querySelector('.temp-status');
+            if (newTemp > 30) {
+                tempStatus.textContent = 'High';
+                tempStatus.className = 'temp-status high';
+            } else if (newTemp < 15) {
+                tempStatus.textContent = 'Low';
+                tempStatus.className = 'temp-status low';
+            } else {
+                tempStatus.textContent = 'Normal';
+                tempStatus.className = 'temp-status normal';
+            }
+            
+            // Update arrow indicators
+            document.querySelector('#tempChange').parentElement.className = tempChange > 0 ? 'status up' : 'status down';
+            document.querySelector('#tempChange').parentElement.querySelector('i').className = tempChange > 0 ? 'fas fa-arrow-up' : 'fas fa-arrow-down';
+            
+            document.querySelector('#humidityChange').parentElement.className = humidityChange > 0 ? 'status up' : 'status down';
+            document.querySelector('#humidityChange').parentElement.querySelector('i').className = humidityChange > 0 ? 'fas fa-arrow-up' : 'fas fa-arrow-down';
+            
+            document.querySelector('#dustChange').parentElement.className = dustChange > 0 ? 'status up' : 'status down';
+            document.querySelector('#dustChange').parentElement.querySelector('i').className = dustChange > 0 ? 'fas fa-arrow-up' : 'fas fa-arrow-down';
+            
+            document.querySelector('#gasChange').parentElement.className = gasChange > 0 ? 'status up' : 'status down';
+            document.querySelector('#gasChange').parentElement.querySelector('i').className = gasChange > 0 ? 'fas fa-arrow-up' : 'fas fa-arrow-down';
+            
+            // Update last sync
+            document.getElementById('lastSync').textContent = 'Just now';
+        }
+    </script>
+</body>
+</html>
